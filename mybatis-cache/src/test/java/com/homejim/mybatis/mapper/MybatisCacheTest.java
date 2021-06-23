@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import sun.util.resources.cldr.en.CalendarData_en_Dsrt_US;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -32,6 +33,34 @@ public class MybatisCacheTest {
         }
     }
 
+
+//    @Test
+//    public void addTest(){
+//        SqlSession sqlSession = null;
+//        try {
+//            sqlSession = sqlSessionFactory.openSession(true);
+//
+//            StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+//
+//            for (int i = 0; i < 10; i++) {
+//                Student student = new Student();
+//                student.setName("jinx"+i);
+//                student.setEmail("xx@gmail.com");
+//                student.setSex(new Byte("1"));
+//                student.setLocked(new Byte("0"));
+//                student.setPhone("12342233");
+//                studentMapper.insert(student);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (sqlSession != null) {
+//                sqlSession.close();
+//            }
+//        }
+//    }
+
     @Test
     public void oneSqlSession() {
         SqlSession sqlSession = null;
@@ -44,7 +73,7 @@ public class MybatisCacheTest {
             for (int i = 0; i < students.size(); i++) {
                 System.out.println(students.get(i));
             }
-            studentMapper.updateByPrimaryKey(students.get(0));
+//            studentMapper.updateByPrimaryKey(students.get(0));
             System.out.println("=============开始同一个 Sqlsession 的第二次查询============");
             // 同一个 sqlSession 进行第二次查询
 
@@ -104,11 +133,11 @@ public class MybatisCacheTest {
 
             StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
             // 执行第一次查询
-            Student student = studentMapper.selectByPrimaryKey(1);
+            Student student = studentMapper.selectByPrimaryKey(11);
             List<Student> students = studentMapper.selectAll();
             System.out.println("=============开始同一个 Sqlsession 的第二次查询============");
             // 同一个 sqlSession 进行第二次查询
-            Student stu = studentMapper.selectByPrimaryKey(1);
+            Student stu = studentMapper.selectByPrimaryKey(11);
             List<Student> stus = studentMapper.selectAll();
             Assert.assertNotEquals(student, stu);
             Assert.assertNotEquals(students, stus);
@@ -122,28 +151,28 @@ public class MybatisCacheTest {
     }
 
     @Test
-    public void secendLevelCacheTest() {
+    public void secondLevelCacheTest() {
 
         // 获取 SqlSession　对象
         SqlSession sqlSession = sqlSessionFactory.openSession();
         //  获取 Mapper 对象
         StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
         // 使用 Mapper 接口的对应方法，查询 id=2 的对象
-        Student student = studentMapper.selectByPrimaryKey(2);
+        Student student = studentMapper.selectByPrimaryKey(12);
         // 更新对象的名称
         student.setName("奶茶");
         // 再次使用相同的 SqlSession 查询id=2 的对象
-        Student student1 = studentMapper.selectByPrimaryKey(2);
-   /*     Assert.assertEquals("奶茶", student1.getName());
+        Student student1 = studentMapper.selectByPrimaryKey(12);
+       Assert.assertEquals("奶茶", student1.getName());
         // 同一个 SqlSession 使用缓存， 则得到的对象都一样的
-        Assert.assertEquals(student, student1);*/
+        Assert.assertEquals(student, student1);
 
         sqlSession.close();
-
+//
         SqlSession sqlSession1 = sqlSessionFactory.openSession();
         StudentMapper studentMapper1 = sqlSession1.getMapper(StudentMapper.class);
-        Student student2 = studentMapper1.selectByPrimaryKey(2);
-        Student student3 = studentMapper1.selectByPrimaryKey(2);
+        Student student2 = studentMapper1.selectByPrimaryKey(12);
+        Student student3 = studentMapper1.selectByPrimaryKey(12);
         Assert.assertEquals("奶茶", student2.getName());
         Assert.assertNotEquals(student3, student2);
 

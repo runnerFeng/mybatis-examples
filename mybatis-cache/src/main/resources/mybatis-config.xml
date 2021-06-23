@@ -6,6 +6,8 @@
     <!-- 配置全局属性 -->
     <settings>
         <setting name="logImpl" value="LOG4J"/>
+        <!--全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存。 -->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <typeAliases>
@@ -23,7 +25,7 @@
                 <!--填写你的数据库用户名-->
                 <property name="username" value="root"/>
                 <!--填写你的数据库密码-->
-                <property name="password" value="jim777"/>
+                <property name="password" value="jinx"/>
             </dataSource>
         </environment>
     </environments>

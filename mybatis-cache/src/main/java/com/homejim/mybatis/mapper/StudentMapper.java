@@ -15,4 +15,6 @@ public interface StudentMapper {
     Student selectByPrimaryKey(int id);
 
     int updateByPrimaryKey(Student student);
+
+    void insert(Student student);
 }
